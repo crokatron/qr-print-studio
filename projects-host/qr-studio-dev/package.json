@@ -1,0 +1,1 @@
+{"name":"qr-studio-build","private":true,"type":"module","dependencies":{"@playwright/test":"1.63.0","esbuild":"0.28.2","fflate":"0.8.3","jsqr":"1.4.0","manifold-3d":"3.5.4","pdfjs-dist":"6.3.289","qrcode":"1.5.4","three":"0.186.1"}}

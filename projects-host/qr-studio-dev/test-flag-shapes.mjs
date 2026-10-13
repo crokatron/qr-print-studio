@@ -1,0 +1,48 @@
+import { chromium } from '@playwright/test';
+import { createServer } from 'node:http';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { resolve, extname } from 'node:path';
+import assert from 'node:assert/strict';
+import { unzipSync, strFromU8 } from 'fflate';
+const root=resolve(import.meta.dirname,'../site'),out=resolve(import.meta.dirname,'../../outputs/qr-studio/flag-shapes');await mkdir(out,{recursive:true});
+const server=createServer(async(req,res)=>{try{const url=new URL(req.url,'http://localhost'),file=resolve(root,'.'+url.pathname+(url.pathname.endsWith('/')?'index.html':''));if(!file.startsWith(root))throw Error();res.setHeader('Content-Type',({'.html':'text/html','.js':'text/javascript','.wasm':'application/wasm','.json':'application/json','.css':'text/css','.png':'image/png'})[extname(file)]||'application/octet-stream');res.end(await readFile(file));}catch{res.statusCode=404;res.end();}});
+await new Promise(r=>server.listen(0,'127.0.0.1',r));
+const browser=await chromium.launch({headless:true,args:['--enable-unsafe-swiftshader']}),page=await browser.newPage({viewport:{width:1440,height:1100}}),errors=[];page.on('pageerror',e=>errors.push(e.message));
+const ready=async()=>{await page.waitForFunction(()=>document.getElementById('status').textContent.startsWith('Ready')||document.getElementById('status').classList.contains('error'),{},{timeout:60000});assert.match(await page.locator('#status').textContent(),/^Ready/);};
+try{
+ await page.goto(`http://127.0.0.1:${server.address().port}/qr-studio/`);await ready();
+ const results=await page.evaluate(async()=>{
+  const {buildModel,defaults,validate}=await import('./geometry.js'),{jsQR,ManifoldModule}=await import('./vendor.js');
+  const m=await ManifoldModule({locateFile:()=>new URL('./manifold.wasm',location.href).href});m.setup();
+  const cases=[];
+  for(const flagShape of ['rectangle','triangle','circle','pointed'])for(const flagSide of ['left','right'])for(const rotation of [0,90,180,270])for(const informationLayout of ['side','stacked'])cases.push({...defaults,style:'flag',flagShape,flagSide,rotation,informationLayout,stakeThickness:6,stakeWidth:20,construction:(rotation===90||rotation===180)?'cross':'flat'});
+  for(const flagShape of ['triangle','circle'])for(const flagSide of ['left','right'])cases.push({...defaults,style:'flag',flagShape,flagSide,genus:'',plantName:'',width:30,stakeWidth:30,stakeThickness:8,construction:'cross',base:1.2}, {...defaults,style:'flag',flagShape,flagSide,width:150,stakeWidth:8,stakeThickness:1.2,rotation:270,plantName:'Borsigiana albo variegata',informationLayout:'side'});
+  function inspect(mesh){const edges=new Map(),adj=new Map(),v=mesh.vertices,t=mesh.indices;let volume=0;for(let i=0;i<t.length;i+=3){const p=t.slice(i,i+3);for(let j=0;j<3;j++){const a=p[j],b=p[(j+1)%3],key=a<b?a+','+b:b+','+a,row=edges.get(key)||[0,0];row[0]++;row[1]+=a<b?1:-1;edges.set(key,row);if(!adj.has(a))adj.set(a,[]);adj.get(a).push(b);}const [a,b,c]=Array.from(p,i=>v.slice(i*3,i*3+3));volume+=(a[0]*(b[1]*c[2]-b[2]*c[1])+a[1]*(b[2]*c[0]-b[0]*c[2])+a[2]*(b[0]*c[1]-b[1]*c[0]))/6;}
+   let components=0;const seen=new Set();for(const v of adj.keys()){if(seen.has(v))continue;components++;const queue=[v];while(queue.length){const x=queue.pop();if(seen.has(x))continue;seen.add(x);queue.push(...adj.get(x).filter(x=>!seen.has(x)));}}return {closed:[...edges.values()].every(([n,d])=>n===2&&d===0),components,volume};}
+  const rows=[];
+  for(const c of cases){const model=await buildModel(c),mesh=b=>new m.Manifold(new m.Mesh({numProp:3,vertProperties:b.vertices,triVerts:b.indices})),base=mesh(model.bodies[0]);let unsupported=0;
+   for(const b of model.bodies.filter(b=>b.name.startsWith('02')||b.name.startsWith('03'))){const raised=mesh(b),below=raised.translate([0,0,-c.relief]),missing=below.subtract(base);unsupported+=missing.isEmpty()?0:missing.volume();missing.delete();below.delete();raised.delete();}
+   // Reconstruct the quiet-zone prism independently and check it is entirely supported by the real backing mesh.
+   const rowsOfText=Number(!!c.genus)+Number(!!c.plantName),side=c.informationLayout==='side',w=c.width+(side&&rowsOfText?Math.max(30,c.width*.75):0),h=c.width+(!side&&rowsOfText?6+rowsOfText*(c.fontSize+3):0);
+   const rotate=([x,y])=>{const p=c.rotation===90?[y,w-x]:c.rotation===180?[w-x,h-y]:c.rotation===270?[h-y,x]:[x,y];return [p[0]+model.layout.offsetX,p[1]+model.layout.offsetY];};
+   const quiet=new m.CrossSection([[[3,h-c.width+3],[c.width-3,h-c.width+3],[c.width-3,h-3],[3,h-3]].map(rotate)]),prism=quiet.extrude(c.base),missing=prism.subtract(base),quietMissing=missing.isEmpty()?0:missing.volume();missing.delete();prism.delete();quiet.delete();base.delete();
+   const qr=model.bodies[1],canvas=document.createElement('canvas'),scale=5;canvas.width=Math.ceil(model.layout.plateW*scale);canvas.height=Math.ceil(model.layout.plateH*scale);const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.fillStyle='#000';ctx.beginPath();for(let i=0;i<qr.indices.length;i+=3){const p=Array.from(qr.indices.slice(i,i+3),j=>Array.from(qr.vertices.slice(j*3,j*3+3)));if(!p.every(v=>Math.abs(v[2]-c.base-c.relief)<.0001))continue;p.forEach((p,i)=>ctx[i?'lineTo':'moveTo'](p[0]*scale,canvas.height-p[1]*scale));ctx.closePath();}ctx.fill();const pixels=ctx.getImageData(0,0,canvas.width,canvas.height),decoded=jsQR(pixels.data,pixels.width,pixels.height)?.data;
+   const {plateW,plateH,outline,pole}=model.layout,geometryChecks=model.bodies.concat(model.combined).map(inspect);
+   rows.push({flagShape:c.flagShape,flagSide:c.flagSide,rotation:c.rotation,informationLayout:c.informationLayout,width:c.width,construction:c.construction,decoded,unsupported,quietMissing,geometryChecks,overlap:Math.abs(model.bodies.reduce((s,b)=>s+b.volume,0)-model.combined.volume),plateW,plateH,outline,pole});
+  }
+  const old=validate({style:'flag',content:defaults.content});let invalid=false;try{validate({...defaults,flagShape:'star'});}catch{invalid=true;}
+  return {rows,migratedShape:old.flagShape,invalid};
+ });
+ for(const r of results.rows){assert.equal(r.decoded,'https://example.invalid/',JSON.stringify(r));assert(r.unsupported<.01,'Floating QR/lettering: '+JSON.stringify(r));assert(r.quietMissing<.01,'Clipped quiet zone: '+JSON.stringify(r));assert(r.overlap<.01,'Colour bodies overlap: '+JSON.stringify(r));for(const mesh of r.geometryChecks){assert(mesh.closed);assert(mesh.volume>0);}assert.equal(r.geometryChecks[0].components,1,JSON.stringify(r));assert.equal(r.geometryChecks.at(-1).components,r.construction==='cross'?2:1,JSON.stringify(r));assert(r.flagSide==='left'?r.pole<r.plateW/2:r.pole>r.plateW/2);if(r.flagShape==='triangle'){assert.equal(r.outline[0].length,3);const tip=r.outline[0].find(p=>Math.abs(p[1]-r.plateH/2)<.0001);assert.equal(tip[0],r.flagSide==='left'?r.plateW:0);}if(r.flagShape==='circle'){assert.equal(r.plateW,r.plateH);const radius=r.plateW/2;assert(r.outline[0].every(([x,y])=>Math.abs(Math.hypot(x-radius,y-radius)-radius)<.0001));}}
+ assert.equal(results.migratedShape,'pointed');assert(results.invalid);await writeFile(out+'/geometry-checks.json',JSON.stringify(results,null,2));
+ await page.getByRole('button',{name:'Flag tag',exact:false}).click();await ready();assert(await page.locator('#flagShape').isVisible());
+ for(const shape of ['rectangle','triangle','circle','pointed']){
+  await page.locator('#flagShape').selectOption(shape);await ready();await page.locator('.preview').screenshot({path:out+'/'+shape+'.png'});
+  const wait=page.waitForEvent('download');await page.locator('#download-parts').click();const download=await wait;await download.saveAs(out+'/'+shape+'.zip');const files=unzipSync(new Uint8Array(await readFile(out+'/'+shape+'.zip'))),config=JSON.parse(strFromU8(files['design.json']));assert.equal(config.config.flagShape,shape);const three=unzipSync(files['plant-tag.3mf']);assert.equal((strFromU8(three['3D/3dmodel.model']).match(/<component /g)||[]).length,3);
+ }
+ await page.locator('#flagShape').selectOption('triangle');await page.locator('#flagSide').selectOption('right');await page.locator('#rotation').selectOption('90');await ready();await page.locator('#reset-view').click();await page.locator('.preview').screenshot({path:out+'/triangle-right-rotated.png'});
+ const jsonWait=page.waitForEvent('download');await page.locator('#save-design').click();const design=await jsonWait;const savedPath=await design.path();await page.locator('#flagShape').selectOption('circle');await ready();await page.locator('#design-file').setInputFiles(savedPath);await page.waitForFunction(()=>document.querySelector('#flagShape').value==='triangle');await ready();assert.equal(await page.locator('#flagShape').inputValue(),'triangle');assert.equal(await page.locator('#flagSide').inputValue(),'right');
+ await page.locator('#style').selectOption('stake');await ready();assert(await page.locator('#flag-shape-field').isHidden());await page.locator('#style').selectOption('flag');await ready();assert.equal(await page.locator('#flagShape').inputValue(),'triangle');
+ await page.setViewportSize({width:390,height:844});await page.locator('#flagShape').scrollIntoViewIfNeeded();assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await page.screenshot({path:out+'/mobile.png'});
+ assert.deepEqual(errors,[]);console.log(`PASS ${results.rows.length} flag models: both pole sides, all rotations/layouts, extreme dimensions, connected closed solids, full support and QR quiet zones, decoded mesh QR, separate colours, automatic UI, saved shape migration and export.`);
+}finally{await browser.close();await new Promise(r=>server.close(r));}

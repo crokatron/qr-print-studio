@@ -1,0 +1,111 @@
+[
+  {
+    "boxes": [
+      {
+        "h": 94,
+        "selector": "#content",
+        "text": "Paste a URL or import a QR image. Verify its content first.",
+        "title": "Start with the link",
+        "w": 322,
+        "x": 366.1875,
+        "y": 452.078125
+      },
+      {
+        "h": 47,
+        "selector": "#plantName",
+        "text": "Set the visible name, then choose raised lettering, sticker space or QR only.",
+        "title": "Name the tag",
+        "w": 322,
+        "x": 366.1875,
+        "y": 981.546875
+      },
+      {
+        "h": 488,
+        "selector": "#viewport",
+        "text": "Rotate the live preview and check margins, dimensions and readable QR modules.",
+        "title": "Inspect the model",
+        "w": 967.625,
+        "x": 728.1875,
+        "y": 492.171875
+      }
+    ],
+    "height": 1408,
+    "width": 2055,
+    "title": "Actual tool · controls at a glance",
+    "caption": "Actual application screenshot. Numbered boxes point to the controls described below. ",
+    "key": "qr-print-studio"
+  },
+  {
+    "boxes": [
+      {
+        "h": 50.1875,
+        "selector": "#download-3mf",
+        "text": "Open the 3MF in your slicer and verify material slots.",
+        "title": "Download the colour model",
+        "w": 460.8125,
+        "x": 750.1875,
+        "y": 978.484375
+      },
+      {
+        "h": 50.1875,
+        "selector": "#download-stl",
+        "text": "Combined STL is geometry only; it has no colour assignments.",
+        "title": "Know what STL loses",
+        "w": 460.8125,
+        "x": 750.1875,
+        "y": 1030.671875
+      },
+      {
+        "h": 50.1875,
+        "selector": "#save-design",
+        "text": "Save design JSON so you can make a different tag later.",
+        "title": "Keep the editable source",
+        "w": 145.609375,
+        "x": 727.1875,
+        "y": 1204.546875
+      }
+    ],
+    "height": 1408,
+    "width": 2055,
+    "title": "Actual tool · export and save",
+    "caption": "Actual application screenshot. Numbered boxes point to the controls described below. ",
+    "key": "qr-print-export"
+  },
+  {
+    "boxes": [
+      {
+        "h": 54,
+        "selector": "#url",
+        "text": "This demo uses a real local QR encoder. No link is opened or uploaded.",
+        "title": "Encode an example link",
+        "w": 260,
+        "x": 318,
+        "y": 349.703125
+      },
+      {
+        "h": 59.1875,
+        "selector": "#buildTag",
+        "text": "Change the name and shape, then rebuild the 2D illustration.",
+        "title": "Update the tag",
+        "w": 260,
+        "x": 318,
+        "y": 674.703125
+      },
+      {
+        "h": 427.578125,
+        "selector": "#scene",
+        "text": "The real tool exports 3D files; this demo shows the design idea.",
+        "title": "See the result",
+        "w": 606.90625,
+        "x": 612,
+        "y": 295.703125
+      }
+    ],
+    "height": 1408,
+    "width": 2055,
+    "key": "simulation",
+    "title": "Try the working offline example",
+    "caption": "Screenshot of this project’s interactive demo. Side-by-side services are explicitly simulated.",
+    "cropHeight": 774.890625
+  }
+]

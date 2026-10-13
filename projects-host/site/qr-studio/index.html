@@ -1,0 +1,86 @@
+<!doctype html>
+
+
+
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#111c18"><title>QR Print Studio · Mungoon</title><link rel="stylesheet" href="./style.css?v=20261009-plant-switch-1"><style>#plant-collection,#tag-editor,#apply-default-flag,a[href="#plant-collection"]{display:none!important}</style></head>
+
+
+
+<body><header><a class="brand" href="/"><img src="/brand.svg" alt=""><span>MUNGOON <b>QR Print Studio</b></span></a><nav class="studio-nav" aria-label="QR Studio"><a href="#plant-collection">All plants</a><a href="#settings">Tag editor</a><a href="/">All projects ↗</a></nav></header>
+
+
+
+<main><section class="intro"><div><p class="eyebrow">FROM A LINK TO A LITTLE LABEL</p><h1>Give your plants a name.</h1><p>Make a scannable tag, add the plant’s genus and name, and take it straight to your printer.</p></div><span class="badge">3D printable tags and stakes</span></section>
+
+
+
+<section id="plant-collection" class="panel plant-catalog"><h2>All plant tags <span id="plant-total"></span></h2><p id="catalog-status" role="status">Loading the plant collection…</p><div class="label-options"><label for="print-mode">Print with</label><select id="print-mode"><option value="stake">3D printer · plant stakes</option><option value="label">Label printer · NIIMBOT / PDF</option></select><div id="label-settings" hidden><h3>Name labels for your D11</h3><div class="label-fields"><label>Printer<select id="label-printer"><option value="d11">NIIMBOT D11</option><option value="custom">Other label printer</option></select></label><label>Label length · mm<input id="label-width" type="number" min="15" max="150" step=".5" value="50"></label><label>Label height · mm<input id="label-height" type="number" min="10" max="150" step=".5" value="15"></label><label>Padding · mm<input id="label-padding" type="number" min="0" max="20" step=".25" value="1"></label><label>Letter size · mm<input id="label-fontSize" type="number" min="1.8" max="8" step=".1" value="3"></label><label>Resolution<select id="label-dpi"><option value="203">203 dpi · original D11</option><option value="300">300 dpi · upgraded D11</option><option value="600">600 dpi · other printer</option></select></label><label><input id="label-scientific" type="checkbox"> Also include scientific name (optional)</label></div><p class="hint">Enter the size printed on your label roll. The D11 uses narrow labels: height is across the roll, length is along it. We keep ink within its 12 mm print width. Names wrap without automatic shrinking.</p><p class="hint"><strong>Name labels only — QR codes stay on the 3D printed stakes.</strong></p><p class="hint"><strong>One-file batch:</strong> Download the PDF to keep this exact size, padding and layout, then import it in NIIMBOT and print all pages at actual size / 100%.</p><p class="hint"><strong>D11 Excel batch:</strong> Import the single Excel file in NIIMBOT’s Excel / batch-print feature. Bind the “Plant name” column to one text box, select all rows and print. Set your label size and margins once in that template. Excel carries names; PDF carries the designed layout.</p><button id="use-name-stickers" type="button">Use these label dimensions on 3D stakes</button><p class="hint">This reserves a flat area below each 3D printed QR for your name sticker.</p><a href="https://portal.niimbot.com/us/solutionOverseas/retail" target="_blank" rel="noopener">NIIMBOT batch import help ↗</a></div></div><p id="linked-plant">Choose a plant to print its permanent HA care link.</p><div class="catalog-tools"><input id="plant-search" type="search" placeholder="Find a plant" aria-label="Find a plant"><button id="refresh-plants">Refresh plants</button><button id="select-all">Select all plants</button><button id="select-matching">Select matching</button><button id="clear-selection">Clear selection</button></div><p class="collection-caption"><span id="plant-matches">Your collection</span> · <span id="batch-count">0 selected</span></p><div id="plant-list" class="plant-tag-list" role="region" aria-label="All plant tags" tabindex="0"></div><div class="catalog-tools"><button id="save-plant" disabled>Save this plant’s print settings to NAS</button><button id="preview-selected" disabled>Preview selected tags</button><button id="cancel-previews" hidden>Cancel previews</button><button id="label-xlsx-export" hidden disabled>NIIMBOT batch · Excel</button><button id="batch-export" disabled>Export selected · X1C plates 3MF</button></div><p id="stake-batch-hint" class="hint">Batch uses each plant’s saved layout and the selected nozzle / name treatment below. The current plant includes your preview edits. One file, multiple 256 × 256 mm plates, with edge and purge-tower clearance. Scan printed tags after printing.</p><section id="batch-previews" hidden aria-label="Selected plant tag previews"><h2>Selected tag previews</h2><p id="preview-status" role="status"></p><div id="preview-grid" class="tag-preview-grid"></div></section></section>
+
+
+
+<section id="tag-editor" class="default-design panel"><div><h2>Rounded flag · default design</h2><p>QR above the names, compact spacing, rounded corners, a curved join and a flush left stake. QR squares stay at least two nozzle widths.</p><p id="draft-note" class="hint"></p></div><div><button id="use-default-flag" class="primary">Use default flag</button><button id="apply-default-flag" disabled>Apply as default flag</button><button id="restore-previous" hidden>Restore previous browser design</button></div></section>
+
+<section class="presets" aria-label="Design starting points"><button type="button" data-preset="classic"><strong>Everyday stake</strong><span>Centred · one piece · flared neck</span></button><button type="button" data-preset="flag"><strong>Flag tag</strong><span>Rounded flag · QR above the name</span></button><button type="button" data-preset="cross"><strong>Slot-together spike</strong><span>Two flat prints · cross-shaped assembly</span></button><button type="button" data-preset="stout"><strong>Stouter stake</strong><span>Shorter · wider · thicker blade</span></button></section>
+
+
+
+<div class="workspace"><form id="settings" class="controls">
+
+
+
+<section class="panel"><h2><span>01</span> The QR code</h2><label for="content">Link or text</label><textarea id="content" rows="3" maxlength="800" placeholder="https://example.invalid/…" required></textarea><p class="hint">Use the plant’s own page link to open its care record.</p>
+
+
+
+<div class="import-row"><label class="button secondary upload" for="qr-file">Import existing QR<input id="qr-file" type="file" accept="image/png,image/jpeg,image/webp,application/pdf,.pdf"></label><label class="page-label" for="pdf-page">PDF page<input id="pdf-page" type="number" min="1" max="1000" value="1"></label></div><p class="hint">PNG, JPG, WebP or PDF · up to 10 MB. We read the content and rebuild a clean code; the original artwork is not traced.</p><p id="qr-optimisation" class="hint" role="status"></p><p id="import-status" class="hint" role="status"></p>
+
+
+
+<details><summary>QR options</summary><label for="ecc">Error correction</label><select id="ecc"><option value="L">Low · less dense</option><option value="M">Medium · recommended</option><option value="Q">Quartile</option><option value="H">High · more dense</option></select><p class="hint">More correction creates a denser code. A four-square clear border is always included.</p></details></section>
+
+
+
+<section class="panel"><h2><span>02</span> The plant</h2><label for="genus">Scientific name / genus</label><input id="genus" maxlength="120" placeholder="e.g. Alocasia"><label for="plantName">Plant name / variety</label><input id="plantName" maxlength="120" placeholder="e.g. Polly"><label for="textMode">Names on the 3D stake</label><select id="textMode"><option value="raised">Raised lettering</option><option value="label">Blank area for a name sticker</option><option value="none">QR only</option></select><div id="sticker-fields"><label for="labelWidth">Sticker length · mm<input id="labelWidth" type="number" min="15" max="140" step=".5"></label><label for="labelHeight">Sticker height · mm<input id="labelHeight" type="number" min="10" max="100" step=".5"></label></div><label for="fontSize">Letter size · mm<input id="fontSize" type="number" min="3" max="24" step="0.5"></label><p class="hint">Enter your own names. Names wrap and the tag grows to keep lettering printable. Letter size is raised for larger nozzles; check your sliced preview.</p></section>
+
+
+
+<section class="panel"><h2><span>03</span> Shape & information</h2><div class="pair"><label for="style">Tag shape<select id="style"><option value="stake">Centred stake</option><option value="flag">Flag · side-mounted</option><option value="tag">Flat tag · no spike</option></select></label><label for="informationLayout">Information layout<select id="informationLayout"><option value="stacked">QR above names</option><option value="side">QR beside names</option></select></label><label for="rotation">Rotate information<select id="rotation"><option value="0">0° · upright</option><option value="90">90° clockwise</option><option value="180">180°</option><option value="270">90° anticlockwise</option></select></label><label id="flag-shape-field" for="flagShape">Flag outline<select id="flagShape"><option value="rectangle">Rectangle</option><option value="triangle">Triangle · points away from pole</option><option value="circle">Circle</option><option value="pointed">Pointed rectangle · original</option></select></label><label id="flag-side-field" for="flagSide">Flag pole side<select id="flagSide"><option value="left">Left</option><option value="right">Right</option></select></label><label for="width">QR panel size · mm<input id="width" type="number" min="30" max="150" step="1"></label><label for="base">Backing · mm<input id="base" type="number" min="1.2" max="6" step="0.2"></label><label for="relief">Raised detail · mm<input id="relief" type="number" min="0.4" max="1.2" step="0.2"></label><label for="nozzle">Nozzle · mm<select id="nozzle"><option value="0.2">0.2</option><option value="0.4">0.4</option><option value="0.6">0.6</option><option value="0.8">0.8</option><option value="1">1.0</option></select></label></div><p class="hint">Rotate the QR and names while the spike stays pointing down. QR panel size sets the square information area; the backing adds room for names and the chosen outline.</p><p id="flag-shape-hint" class="hint">Triangles point away from the pole and mirror with its side. Triangle and circle backings grow around the information to keep the QR border and names intact. Reset view fits a larger outline on screen.</p></section>
+
+
+
+<section class="panel" id="stake-fields"><h2><span>04</span> Spike & joint</h2><label for="construction">Construction<select id="construction"><option value="flat">One-piece flat blade</option><option value="cross">Two-piece slotted cross</option></select></label><div class="pair"><label for="stakeLength">Spike length · mm<input id="stakeLength" type="number" min="30" max="180" step="5"></label><label for="stakeWidth">Blade width · mm<input id="stakeWidth" type="number" min="8" max="30" step="1"></label><label for="stakeThickness">Blade thickness · mm<input id="stakeThickness" type="number" min="1.2" max="8" step="0.2"></label><label for="reinforcement">Neck<select id="reinforcement"><option value="rounded">Rounded join · rectangular flag</option><option value="flared">Flared shoulders</option><option value="straight">Straight</option></select></label></div><div id="joint-fields"><label for="clearance">Slot clearance · mm<input id="clearance" type="number" min="0.1" max="0.8" step="0.05"></label><p class="hint">Total extra slot width, not clearance per side. Both blades use the chosen thickness. Slots have rounded ends. Start with 0.25 mm, then use the fit test to suit your printer.</p></div><p class="hint">Thicker or shorter blades resist bending better. Flared shoulders spread the transition into the tag. Presets are starting dimensions; material, print settings and joint fit still matter.</p></section>
+
+
+
+<section class="panel"><h2><span>05</span> Colours & preview</h2><div class="colours"><label for="backColor"><input id="backColor" type="color">Backing</label><label for="qrColor"><input id="qrColor" type="color">QR</label><label for="textColor"><input id="textColor" type="color">Lettering</label></div><p class="hint live-hint">Live preview · drag a slider or type an exact value. Changes update automatically.</p><button id="build" class="secondary" type="submit">Rebuild preview</button></section>
+
+
+
+</form><div class="result"><section class="preview panel"><div class="preview-bar"><div><p class="eyebrow">YOUR PRINT</p><h2 id="preview-title">Plant stake</h2><p id="name-treatment" class="hint" role="status"></p></div><div class="view-buttons"><button id="view-3d" aria-pressed="true">3D</button><button id="view-flat" aria-pressed="false">QR face</button><button id="reset-view" title="Reset camera">Reset view</button></div></div><div id="viewport" aria-label="Interactive 3D plant tag preview"></div><div id="flat-view" hidden><canvas id="qr-canvas" aria-label="Scannable QR code preview"></canvas><p>QR face · same content and four-square border as the model</p></div><div class="preview-caption"><span id="dimensions">Preparing model…</span><span>Drag to rotate · scroll to zoom</span></div></section>
+
+
+
+<div class="assembly-controls"><label for="view-mode">Model view<select id="view-mode"><option value="print">Flat print layout</option><option value="assembled">Assembled cross spike</option></select></label><p id="assembly-note">Downloads use the flat print layout.</p></div><p id="strength-summary" class="hint"></p>
+
+
+
+<p id="status" class="status" role="status" aria-live="polite">Loading the workshop…</p><ul id="warnings" class="warnings" hidden></ul>
+
+
+
+<section class="panel export"><div><p class="eyebrow">READY FOR THE SLICER</p><h2>Aligned parts. Separate colours.</h2><p>Backing, QR and lettering stay aligned. Matching colours share a filament slot; a cross blade prints as its own piece.</p></div><div id="body-list" class="body-list"></div><div class="download-grid"><button id="download-3mf" class="primary" disabled>Download colour 3MF</button><button id="download-parts" disabled>STL parts + 3MF ZIP</button><button id="download-stl" disabled>Combined STL</button><button id="download-png" disabled>QR image PNG</button></div><p class="hint">3MF includes named parts and Bambu Studio / OrcaSlicer filament assignments. Choose your printer profile and check spool mapping in the slicer. Other slicers may require manual colour assignment. STL has no colour metadata.</p><details><summary>Printing & scanning tips</summary><p>Print flat, with the QR and text facing up. Use opaque pale filament for the backing and dark filament for the QR. Inspect thin lettering in the sliced preview and scan the finished print before putting it in a pot.</p><p>For STL parts, import 01 Backing, 02 QR and 03 Lettering together as one object with parts. Keep their coordinates; do not arrange or drop raised parts to the bed separately. Import 04 Cross blade separately if present. The fit-test STL is a separate trial print.</p><p>The combined/print-layout STL has no colours. A manual colour change at backing height also colours any thicker spike above that height; use 3MF for independent colours. The default 2.4 mm backing and 0.6 mm details suit 0.2 mm layers. A QR code linking to Plant Manager still uses its normal sign-in.</p></details></section>
+
+
+
+<section class="panel" id="assembly-guide" hidden><h2>Print flat. Slide together.</h2><ol><li>Download the fit test and print its two small pieces at the blade thickness.</li><li>Turn one piece 90° and slide the open slots toward each other. Adjust clearance if the fit is too tight or loose.</li><li>Print the tag and its separate cross blade flat. Keep QR and lettering aligned on the tag.</li><li>Slide the cross blade upward from the pointed end of the tag’s spike until the slot ends meet. The top of the second blade sits below the flared neck.</li></ol><p class="hint">A sliding joint is not a latch. Check the fit before inserting into soil. The assembled view is for inspection; export always lays both pieces flat.</p><button id="download-fit" disabled>Download small fit-test STL</button></section>
+
+
+
+<section class="design-tools"><button id="save-design" disabled>Save design JSON</button><label class="button secondary upload" for="design-file">Open design<input id="design-file" type="file" accept=".json,application/json"></label><span>Designs remember this browser. Save design JSON to keep a portable copy.</span></section>
+
+
+
+</div></div></main><footer>Community edition · QR imports and model generation stay in your browser. <a href="./licenses.txt">Open-source credits</a></footer><script type="module" src="./app.js?v=20261009-plant-switch-1"></script></body></html>
+
+
+

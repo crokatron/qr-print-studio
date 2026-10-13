@@ -1,0 +1,82 @@
+{
+  "slug": "qr-print-studio",
+  "title": "QR Print Studio",
+  "summary": "Design readable QR tags and plant labels for 3D printing. Start with a URL or an existing QR image, add names, choose a stake or flat-tag shape, and export printable bodies. The hosted edition can also use the plant collection and batch label workflows. It is a design/export tool; your slicer or label-printer application still prepares and sends the print.",
+  "features": [
+    [
+      "QR input",
+      "Generate from a link or decode PNG, JPG, WebP and PDF QR artwork.",
+      "Standalone + hosted"
+    ],
+    [
+      "Tag layouts",
+      "Combine QR and names; rotate content and choose a centred stake, left/right flag or flat tag.",
+      "Both"
+    ],
+    [
+      "Geometry controls",
+      "Adjust blade, neck and label dimensions and preview the resulting geometry.",
+      "Both"
+    ],
+    [
+      "Slotted spikes",
+      "Create two blades that slot together; export a small fit test before the full design.",
+      "Both"
+    ],
+    [
+      "Colour-aware exports",
+      "Export 3MF or aligned STL bodies so the slicer can assign materials to the intended regions.",
+      "Both"
+    ],
+    [
+      "Plant collection",
+      "Search plants, retain per-plant settings and preview/export selected tags on multiple plates.",
+      "Hosted"
+    ],
+    [
+      "Name stickers",
+      "Set actual label-roll dimensions, padding, type size and printer resolution; export PDF or an Excel name batch.",
+      "Hosted"
+    ]
+  ],
+  "workflows": [
+    [
+      "Make your first QR tag",
+      [
+        "Paste an ordinary demonstration URL into the QR input. If importing artwork, choose a clear image or PDF and verify the decoded link before designing around it.",
+        "Enter a short readable name; add a scientific name only if useful. Choose a starting layout and tag type.",
+        "Set overall dimensions, label placement and content rotation. Refresh the preview and check that lettering, QR modules and margins remain distinct.",
+        "Export a colour 3MF, open it in your slicer and assign the intended filament colours. Verify size and part placement before slicing.",
+        "Print one test tag and scan the physical result. A successful model export does not demonstrate that your print is optically readable."
+      ]
+    ],
+    [
+      "Choose the right shape",
+      [
+        "Use a flat tag for attachment to a surface, a centred stake for a straight insertion point, or a left/right flag when the label needs to sit beside the stake.",
+        "For slotted spikes, inspect both blades in the assembly preview, then export and print the fit-test STL.",
+        "Adjust the slot fit based on your printer and material. Only then export the full pair. Keep the two blades as their intended separate parts."
+      ]
+    ],
+    [
+      "Batch plant tags — hosted edition",
+      [
+        "Open All plants, refresh the collection and search for the group you want. Select matching plants or individual records.",
+        "Open a plant’s Tag editor, refine its layout and save that plant’s print settings to NAS. Review the selected nozzle and name treatment.",
+        "Preview selected tags. Resolve crowded names or unsuitable sizes before exporting the multi-plate 3MF.",
+        "Open the batch in the slicer and review every plate, including purge-tower and edge clearances. Per-plant settings should not be assumed identical."
+      ]
+    ],
+    [
+      "Make name stickers — hosted edition",
+      [
+        "Choose the label-printer mode. Enter the dimensions printed on your roll; length runs along the roll and height across it.",
+        "Adjust padding and letter size. The D11 layout respects its narrower printable width; text wrapping is preferable to unreadably shrinking every name.",
+        "Choose PDF when you need to retain the designed dimensions and layout, and print at actual size / 100%.",
+        "Choose the Excel batch for a printer application’s data import. Bind Plant name to a text field in that application. Excel supplies names; it does not preserve the PDF’s exact layout.",
+        "Name stickers contain text; the QR remains on the 3D-printed stake. Use the label-dimension option to reserve a matching flat space on the stake."
+      ]
+    ]
+  ],
+  "limits": "A browser preview and valid 3MF archive have been checked. Physical printing, scanning and the full range of printers/materials remain separate checks. The standalone export has no connected plant catalog or NAS batch service."
+}
