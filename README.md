@@ -4,7 +4,9 @@
 
 Design readable QR tags and plant labels for 3D printing. Start with a URL or an existing QR image, add names, choose a stake or flat-tag shape, and export printable bodies. The hosted edition can also use the plant collection and batch label workflows. It is a design/export tool; your slicer or label-printer application still prepares and sends the print.
 
-**Private preview · not published.**
+[Publication checks and remaining limits](docs/PUBLICATION.md)
+
+**Public source preview · MIT for original contributions.**
 
 [Open the visual manual](docs/USER-MANUAL.md) · [Download the self-contained demo](demo.html) · [Release notes](CHANGELOG.md)
 

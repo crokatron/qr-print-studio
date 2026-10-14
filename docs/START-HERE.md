@@ -12,4 +12,4 @@ Printable QR tags and plant labels with shape, size, fitting and export options.
 
 **Next maintainer action:** Print a dimensional fit coupon and scan the actual printed code; test catalog-linked batching separately. When rebuilding the full tool, work in qr-studio-dev, install its recorded dependencies and run node build.mjs; package.json does not define an npm test shortcut.
 
-**Status:** private upload verified on 14 October 2026. These guides accompany the private source package. Live runtime, data backups and full recovery were not retested. Public release needs separate approval.
+**Status:** private upload verified on 14 October 2026. These guides accompany the source package. Live runtime, data backups and full recovery were not retested. Public sharing was authorised on 14 October 2026; the NAS backup remains private.
