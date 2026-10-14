@@ -1,5 +1,7 @@
 # QR Print Studio
 
+**Maintaining this project? [Start here](docs/START-HERE.md) · [Detailed handover](docs/HANDOVER.md)**
+
 Design readable QR tags and plant labels for 3D printing. Start with a URL or an existing QR image, add names, choose a stake or flat-tag shape, and export printable bodies. The hosted edition can also use the plant collection and batch label workflows. It is a design/export tool; your slicer or label-printer application still prepares and sends the print.
 
 **Private preview · not published.**
@@ -12,7 +14,7 @@ Download `demo.html` using GitHub’s Download raw file control, then open it in
 
 ### Actual tool · controls at a glance
 
-Actual application screenshot. Numbered boxes point to the controls described below. 
+Actual application screenshot. Numbered boxes point to the controls described below.
 
 ![QR Print Studio — numbered controls](docs/images/guide-1.jpg)
 
@@ -22,7 +24,7 @@ Actual application screenshot. Numbered boxes point to the controls described be
 
 ### Actual tool · export and save
 
-Actual application screenshot. Numbered boxes point to the controls described below. 
+Actual application screenshot. Numbered boxes point to the controls described below.
 
 ![QR Print Studio — numbered controls](docs/images/guide-2.jpg)
 
